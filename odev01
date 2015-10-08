@@ -1,0 +1,87 @@
+import numpy
+import matplotlib.pyplot as pyplot
+
+mu1, sigma1 = -2, 0.60
+mu2, sigma2= 4, 1.2
+aralik=[]
+i,j,m,n=0,0,0,0
+toplam=0
+
+hist1 = numpy.zeros(40)
+hist2 = numpy.zeros(40)
+
+
+a1=numpy.random.normal(mu1,sigma1,10000)
+a1r=numpy.round(a1)
+
+
+a2=numpy.random.normal(mu2,sigma2,10000)
+a2r=numpy.round(a2)
+
+
+aralik.extend(range(-20,20))
+
+
+for i in range (0,10000):
+	hist1[int(a1r[i])+20]=hist1[int(a1r[i])+20]+1
+for j in range (0,10000):
+	hist2[int(a2r[j])+20]=hist2[int(a2r[j])+20]+1
+
+
+#normalisation
+
+for i in range(0,39):
+	hist1[i] = hist1[i]/hist1.sum()
+for j in range(0,39):
+	hist2[j] = hist2[j]/hist2.sum()
+
+print 'SUM'
+print hist1.sum()
+print hist2.sum()
+print 'Lists'
+print hist1
+print hist2
+
+
+#distance
+	
+while (i<=39 and j<=39):
+	if hist1[i]==0:
+		i=i+1
+		
+		continue
+
+	if hist2[j]==0:
+		j=j+1
+		
+		continue
+		
+for i in range (0,39):
+	if hist1[i]==hist2[i]:
+		toplam=toplam+hist1[i]
+		hist1[i]=0
+		hist2[i]=0
+				
+
+	if hist1[i]>hist2[j]:
+		toplam=toplam+hist1[i]*abs(i-j)
+		hist2[j]=0
+		hist1[i]=hist1[i]-hist2[j]
+	
+
+	if hist1[i]<hist2[j]:
+		toplam=toplam+hist2[j]*abs(j-i)
+		hist1[i]=0
+		hist2[j]=hist2[j]-hist1[i]
+		
+		
+
+print toplam
+
+
+
+bins = numpy.linspace(-20, 20, 100)
+pyplot.hist(a1r, bins,label='a1r')
+pyplot.hist(a2r, bins,label='a2r')
+pyplot.legend(loc='upper right')
+pyplot.show()
